@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Buy {{ product.name }} - ShopEasy</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .buy-page {
+            min-height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 20px;
+        }
+
+        .buy-card {
+            width: 700px;
+            max-width: 100%;
+            background: white;
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.10);
+        }
+
+        .buy-card h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .product-name {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .product-info {
+            text-align: center;
+            margin: 15px 0 30px;
+        }
+
+        .product-price {
+            font-size: 25px;
+            font-weight: bold;
+            color: #6c5ce7;
+        }
+
+        .buy-card label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        .buy-card input,
+        .buy-card textarea {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        .buy-card textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .confirm-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 25px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #6c5ce7, #0984e3);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .back-btn {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #6c5ce7;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🛒 ShopEasy
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/products">
+            Home
+        </a>
+
+        <a href="/products#products">
+            Products
+        </a>
+
+        <a href="/add-product">
+            Add Product
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- BUY PAGE -->
+
+<section class="buy-page">
+
+    <div class="buy-card">
+
+        <h1>
+            🛍️ Buy Product
+        </h1>
+
+
+        <div class="product-name">
+
+            {{ product.name }}
+
+        </div>
+
+
+        <div class="product-info">
+
+            <p>
+                Category: {{ product.category }}
+            </p>
+
+            <p class="product-price">
+                ₹{{ "{:,.0f}".format(product.price) }}
+            </p>
+
+        </div>
+
+
+        <hr>
+
+
+        <h2>
+            📦 Delivery Details
+        </h2>
+
+
+        <form
+            action="/buy/{{ product.id }}"
+            method="POST"
+        >
+
+
+            <!-- NAME -->
+
+            <label>
+                Your Name
+            </label>
+
+            <input
+                type="text"
+                name="name"
+                placeholder="Enter your name"
+                pattern="[A-Z][A-Za-z\s]{2,}"
+                title="Name must start with a capital letter and contain at least 3 characters"
+                required
+            >
+
+
+            <!-- PHONE -->
+
+            <label>
+                Mobile Number
+            </label>
+
+            <input
+                type="tel"
+                name="phone"
+                placeholder="Enter 10 digit mobile number"
+                pattern="^\d{10}$"
+                maxlength="10"
+                title="Phone number must be 10 digits"
+                required
+            >
+
+
+            <!-- ADDRESS -->
+
+            <label>
+                Delivery Address
+            </label>
+
+            <textarea
+                name="address"
+                placeholder="Enter your delivery address"
+                required
+            ></textarea>
+
+
+            <!-- QUANTITY -->
+
+            <label>
+                Quantity
+            </label>
+
+            <input
+                type="number"
+                id="buyQuantity"
+                name="quantity"
+                value="1"
+                min="1"
+                required
+            >
+
+
+            <!-- CONFIRM -->
+
+            <button
+                type="submit"
+                class="confirm-btn"
+            >
+                Confirm Order →
+            </button>
+
+        </form>
+
+
+        <a
+            href="/products"
+            class="back-btn"
+        >
+            ← Back to Products
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <div class="footer-logo">
+        🛒 ShopEasy
+    </div>
+
+    <p>
+        Your modern online shopping destination.
+    </p>
+
+    <hr>
+
+    <p>
+        © 2026 ShopEasy | All Rights Reserved
+    </p>
+
+</footer>
+
+<script>
+
+let savedQuantity = sessionStorage.getItem("productQuantity");
+
+if (savedQuantity) {
+
+    document.getElementById("buyQuantity").value = savedQuantity;
+
+    sessionStorage.removeItem("productQuantity");
+
+}
+
+</script>
+
+</body>
+
+</html>
+

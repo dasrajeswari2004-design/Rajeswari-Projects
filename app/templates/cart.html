@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ShopEasy - My Cart</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🛒 ShopEasy
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/products">Home</a>
+
+        <a href="/products#products">Products</a>
+
+        <a href="/cart">🛒 Cart</a>
+
+        <a href="/add-product">Add Product</a>
+
+    </div>
+
+</nav>
+
+
+<section class="cart-page">
+
+    <div class="cart-title">
+
+        <p>YOUR SHOPPING CART</p>
+
+        <h1>🛒 My Cart</h1>
+
+        <span>
+            Review your selected products
+        </span>
+
+    </div>
+
+
+    {% if cart %}
+
+    <div class="cart-container">
+
+        <div class="cart-items">
+
+            {% for product in cart %}
+
+            <div class="cart-item">
+
+                <div class="cart-image">
+                    <a href="{{ url_for('product_detail', product_id=product.id) }}"></a>
+
+                        {% if product.image %}
+
+                        <img
+                            src="{{ url_for('static', filename='images/' + product.image) }}"
+                            alt="{{ product.name }}"
+                        >
+
+                        {% else %}
+
+                        🛍️
+
+                        {% endif %}
+                    
+                    </a>
+
+                </div>
+
+
+                <div class="cart-info">
+
+                    <p class="cart-category">
+                        {{ product.category }}
+                    </p>
+
+                    <h3>
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}">
+                        {{ product.name }}
+                        </a>
+                    </h3>
+
+                    <p class="cart-price">
+                        ₹{{ "{:,.0f}".format(product.price) }}
+                    </p>
+
+                    <div class="quantity-box">
+
+                        <span>Quantity:</span>
+
+                        <a href="/decrease-cart/{{ product.id }}" class="quantity-btn">
+                            −
+                        </a>
+
+                        <strong>
+                            {{ product.quantity }}
+                        </strong>
+
+                        <a href="/increase-cart/{{ product.id }}" class="quantity-btn">
+                            +
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <div class="cart-actions">
+
+                    <a
+                        href="/buy/{{ product.id }}"
+                        class="cart-buy"
+                    >
+                        Buy Now
+                    </a>
+
+                    <a
+                        href="/remove-cart/{{ product.id }}"
+                        class="cart-remove"
+                    >
+                        Remove
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <div class="cart-summary">
+
+            <h2>Order Summary</h2>
+
+            <div class="summary-row">
+
+                <span>Items</span>
+
+                <span>{{ total_items }}</span>
+
+            </div>
+
+            <div class="summary-row total">
+
+                <span>Total</span>
+
+                <span>₹{{ "{:,.0f}".format(total_price) }}</span>
+
+            </div>
+
+            <a href="/products" class="continue-shopping">
+                ← Continue Shopping
+            </a>
+
+            <a href="/cart-checkout" class="checkout-btn">
+                Proceed to Checkout →
+            </a>
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-cart">
+
+        <div class="empty-icon">
+            🛒
+        </div>
+
+        <h2>Your cart is empty</h2>
+
+        <p>
+            Looks like you haven't added anything to your cart yet.
+        </p>
+
+        <a href="/products">
+            Start Shopping →
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+
+<footer>
+
+    <div class="footer-logo">
+        🛒 ShopEasy
+    </div>
+
+    <p>
+        Your modern online shopping destination.
+    </p>
+
+    <hr>
+
+    <p>
+        © 2026 ShopEasy | All Rights Reserved
+    </p>
+
+</footer>
+
+
+</body>
+</html>

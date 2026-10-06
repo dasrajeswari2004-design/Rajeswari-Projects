@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Payment - ShopEasy</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🛒 ShopEasy
+    </div>
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('product_list') }}">
+            Home
+        </a>
+
+        <a href="{{ url_for('product_list') }}#products">
+            Products
+        </a>
+
+        <a href="{{ url_for('ai_finder') }}">
+            🤖 AI Finder
+        </a>
+
+        <a href="{{ url_for('view_cart') }}">
+            🛒 Cart
+        </a>
+
+    </div>
+
+</nav>
+
+
+<section class="cart-payment-page">
+
+    <h1>💳 Payment</h1>
+
+    <p>Complete your order securely</p>
+
+
+    <div class="payment-container">
+
+
+        <!-- ORDER SUMMARY -->
+
+        <div class="payment-order">
+
+            <h2>Order Summary</h2>
+
+            {% for product in cart %}
+
+            <div class="payment-item">
+
+                <div>
+
+                    <h3>
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}">
+                            {{ product.name }}
+                        </a>
+                    </h3>
+
+                    <p>
+                        Quantity: {{ product.quantity }}
+                    </p>
+
+                </div>
+
+                <strong>
+                    ₹{{ "{:,.0f}".format(product.price * product.quantity) }}
+                </strong>
+
+            </div>
+
+            {% endfor %}
+
+
+            <hr>
+
+
+            <div class="payment-total">
+
+                <span>
+                    Total Items
+                </span>
+
+                <strong>
+                    {{ total_items }}
+                </strong>
+
+            </div>
+
+
+            <div class="payment-total">
+
+                <span>
+                    Grand Total
+                </span>
+
+                <strong>
+                    ₹{{ "{:,.0f}".format(total_price) }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- PAYMENT FORM -->
+
+        <div class="payment-method">
+
+            <h2>Select Payment Method</h2>
+
+
+            <form
+                action="{{ url_for('cart_payment') }}"
+                method="POST"
+            >
+
+                <label>
+
+                    <input
+                        type="radio"
+                        name="payment_method"
+                        value="UPI"
+                        required
+                    >
+
+                    📱 UPI
+
+                </label>
+
+
+                <label>
+
+                    <input
+                        type="radio"
+                        name="payment_method"
+                        value="Card"
+                    >
+
+                    💳 Debit / Credit Card
+
+                </label>
+
+
+                <label>
+
+                    <input
+                        type="radio"
+                        name="payment_method"
+                        value="COD"
+                    >
+
+                    📦 Cash on Delivery
+
+                </label>
+
+
+                <button type="submit">
+
+                    Pay ₹{{ "{:,.0f}".format(total_price) }} →
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</body>
+
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ShopEasy - Online Store</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+
+
+<nav class="navbar">
+
+    <div class="logo">
+        🛒 ShopEasy
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/products">Home</a>
+
+        <a href="#products">Products</a>
+
+        <a href="/add-product">Add Product</a>
+        
+        <a href="{{ url_for('view_cart') }}">🛒 Cart ({{ cart_count }}) </a>
+
+
+    </div>
+
+</nav>
+
+
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <p class="hero-small">
+            WELCOME TO SHOPEASY
+        </p>
+
+        <h1>
+            Shop the Future.
+            <br>
+            Live Better.
+        </h1>
+
+        <p>
+            Discover quality products at amazing prices.
+        </p>
+
+        <a href="#products" class="shop-btn">
+            Start Shopping →
+        </a>
+
+    </div>
+
+</section>
+
+
+
+<section class="search-section">
+
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="🔍 Search for products..."
+        onkeyup="searchProducts()"
+    >
+
+</section>
+
+
+
+<section class="categories">
+
+    <button onclick="filterProducts('all')">
+        All
+    </button>
+
+    <button onclick="filterProducts('Electronics')">
+        💻 Electronics
+    </button>
+
+    <button onclick="filterProducts('Men')">
+        👕 Men
+    </button>
+
+    <button onclick="filterProducts('Women')">
+        👗 Women
+    </button>
+
+    <button onclick="filterProducts('Accessories')">
+        ⌚ Accessories
+    </button>
+
+</section>
+
+
+
+<main class="container" id="products">
+
+    <div class="section-title">
+
+        <p class="section-small">
+            OUR COLLECTION
+        </p>
+
+        <h2>
+            Featured Products
+        </h2>
+
+        <p>
+            Choose your favourite product
+        </p>
+
+    </div>
+
+
+    <div class="add-product-container">
+
+        <a href="/add-product" class="add-product">
+            + Add New Product
+        </a>
+
+    </div>
+
+
+    <div class="products">
+
+
+        {% for product in products %}
+
+        <div
+            class="card product-card"
+            data-category="{{ product.category }}"
+        >
+
+
+            
+
+            <div class="product-image">
+
+                {% if product.image %}
+                    <img src="{{url_for('static', filename='images/' + product.image) }}"
+                    alt="{{ product.name }}"
+                    >
+                {% else %}
+                    <div style="font-size: 60px; padding: 50px; text-align: center;">
+                    🛍️
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <div class="product-info">
+
+                <p class="category">
+                    {{ product.category }}
+                </p>
+
+                <h3>
+                    {{ product.name }}
+                </h3>
+
+                <p class="price">
+                    ₹{{ product.price }}
+                </p>
+
+
+    
+
+                <div class="buttons">
+
+                    <a
+                        href="{{ url_for('add_to_cart', id=product.id) }}"
+                        class="btn cart"
+                    >
+                        🛒 Add to Cart
+                    </a>
+
+                    <a
+                        href="{{ url_for('buy_product', id=product.id) }}"
+                        class="btn buy"
+                    >
+                        Buy Now
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+
+    </div>
+
+</main>
+
+<section class="features">
+
+    <div class="section-title">
+
+        <p class="section-small">
+            WHY CHOOSE US
+        </p>
+
+        <h2>
+            Shopping Made Easy
+        </h2>
+
+    </div>
+
+
+    <div class="feature-container">
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                🚚
+            </div>
+
+            <h3>
+                Fast Delivery
+            </h3>
+
+            <p>
+                Quick and reliable delivery.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                🔒
+            </div>
+
+            <h3>
+                Secure Shopping
+            </h3>
+
+            <p>
+                Your shopping experience is safe.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                ⭐
+            </div>
+
+            <h3>
+                Quality Products
+            </h3>
+
+            <p>
+                Carefully selected products.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                💳
+            </div>
+
+            <h3>
+                Easy Payment
+            </h3>
+
+            <p>
+                Simple and convenient checkout.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <div class="footer-logo">
+        🛒 ShopEasy
+    </div>
+
+    <p>
+        Your modern online shopping destination.
+    </p>
+
+    <hr>
+
+    <p>
+        © 2026 ShopEasy | All Rights Reserved
+    </p>
+
+</footer>
+
+
+
+<script>
+
+function searchProducts() {
+
+    let search = document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+    let products =
+        document.querySelectorAll(".product-card");
+
+    products.forEach(function(product) {
+
+        let name = product
+            .querySelector("h3")
+            .innerText
+            .toLowerCase();
+
+        if (name.includes(search)) {
+
+            product.style.display = "block";
+
+        } else {
+
+            product.style.display = "none";
+
+        }
+
+    });
+
+}
+
+
+function filterProducts(category) {
+
+    let products =
+        document.querySelectorAll(".product-card");
+
+    products.forEach(function(product) {
+
+        if (
+            category === "all" ||
+            product.dataset.category === category
+        ) {
+
+            product.style.display = "block";
+
+        } else {
+
+            product.style.display = "none";
+
+        }
+
+    });
+
+}
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,303 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Product - ShopEasy</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .add-page {
+            min-height: 80vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 50px 20px;
+        }
+
+        .add-card {
+            width: 600px;
+            max-width: 100%;
+
+            background: white;
+
+            padding: 40px;
+
+            border-radius: 25px;
+
+            box-shadow:
+                0 10px 35px rgba(0,0,0,0.10);
+        }
+
+        .add-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .add-icon {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        .add-header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .add-header p {
+            color: #777;
+        }
+
+        .product-form {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .product-form label {
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .product-form input {
+            width: 100%;
+
+            padding: 14px;
+
+            border: 1px solid #ddd;
+
+            border-radius: 10px;
+
+            font-size: 14px;
+
+            outline: none;
+        }
+
+        .product-form input:focus {
+            border-color: #6c5ce7;
+
+            box-shadow:
+                0 0 0 3px rgba(108,92,231,0.10);
+        }
+
+        .add-btn {
+            border: none;
+
+            padding: 14px;
+
+            margin-top: 20px;
+
+            background: #6c5ce7;
+
+            color: white;
+
+            border-radius: 10px;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .add-btn:hover {
+            background: #5748c9;
+
+            transform: translateY(-2px);
+        }
+
+        .back-btn {
+            display: block;
+
+            text-align: center;
+
+            margin-top: 18px;
+
+            text-decoration: none;
+
+            color: #6c5ce7;
+
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<!-- Navbar -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🛒 ShopEasy
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/products">
+            Home
+        </a>
+
+        <a href="/products#products">
+            Products
+        </a>
+
+        <a href="/add-product">
+            Add Product
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- Add Product -->
+
+<section class="add-page">
+
+    <div class="add-card">
+
+
+        <div class="add-header">
+
+            <div class="add-icon">
+                ➕
+            </div>
+
+            <h1>
+                Add New Product
+            </h1>
+
+            <p>
+                Add a new product to your ShopEasy store.
+            </p>
+
+        </div>
+
+
+        <form
+            action="/add-product"
+            method="POST"
+            enctype="multipart/form-data"
+            class="product-form"
+           
+        >
+
+            <label>
+                Product Name
+            </label>
+
+            <input
+                type="text"
+                name="name"
+                placeholder="Enter product name"
+                required
+            >
+
+
+            <label>
+                Price
+            </label>
+
+            <input
+                type="number"
+                name="price"
+                placeholder="Enter product price"
+                min="1"
+                required
+            >
+
+
+            <label>
+                Category
+            </label>
+
+            <input
+                type="text"
+                name="category"
+                placeholder="Electronics, Men, Women..."
+                required
+            >
+
+            <label>
+                Description
+            </label>
+
+            <textarea
+                name="description"
+                placeholder="Enter product description"
+                rows="4"
+                required
+            ></textarea>
+
+            <label>
+                Product Image
+            </label>
+
+            <input
+                type="file"
+                name="image"
+                accept="image/*"
+                required
+            >
+
+    
+            <button
+                type="submit"
+                class="add-btn"
+            >
+                ➕ Add Product
+            </button>
+
+        </form>
+
+
+        <a href="/products" class="back-btn">
+            ← Back to Products
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- Footer -->
+
+<footer>
+
+    <div class="footer-logo">
+        🛒 ShopEasy
+    </div>
+
+    <p>
+        Your modern online shopping destination.
+    </p>
+
+    <hr>
+
+    <p>
+        © 2026 ShopEasy | All Rights Reserved
+    </p>
+
+</footer>
+
+
+</body>
+</html>
+

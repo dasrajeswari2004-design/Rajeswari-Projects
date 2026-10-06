@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Product</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #fce7f3);
+        }
+
+        .container {
+            width: 500px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            text-align: center;
+            color: #4f46e5;
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+            display: block;
+            margin-bottom: 7px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            box-sizing: border-box;
+            font-size: 15px;
+            margin-bottom: 18px;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #4f46e5;
+            outline: none;
+            box-shadow: 0 0 5px rgba(79, 70, 229, 0.3);
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .current-image {
+            text-align: center;
+            margin-bottom: 22px;
+            padding: 15px;
+            background: #f8f9ff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+        }
+
+        .current-image img {
+            width: 160px;
+            height: 160px;
+            object-fit: contain;
+            border-radius: 10px;
+            border: 2px solid #4f46e5;
+            background: white;
+            padding: 5px;
+        }
+
+
+        .update-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .update-btn:hover {
+            opacity: 0.9;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>✏️ Edit Product</h1>
+
+        <form action="/edit/{{ product.id }}"
+              method="POST"
+              enctype="multipart/form-data">
+
+            <label>Product Name:</label>
+
+            <input
+                type="text"
+                name="name"
+                value="{{ product.name }}"
+                required
+            >
+
+            <label>Price:</label>
+
+            <input
+                type="number"
+                name="price"
+                value="{{ product.price }}"
+                required
+            >
+
+            <label>Category:</label>
+
+            <input
+                type="text"
+                name="category"
+                value="{{ product.category }}"
+                required
+            >
+
+            <label>Description:</label>
+
+            <textarea
+                name="description"
+                rows="5"
+                placeholder="Enter product description"
+                required
+            >{{ product.description }}</textarea>
+
+            <label>Current Image:</label>
+
+            <div class="current-image">
+                <img
+                    src="{{ url_for('static', filename='images/' + product.image) }}"
+                    alt="{{ product.name }}"
+                >
+            </div>
+
+            <label>Choose New Image:</label>
+
+            <input
+                type="file"
+                name="image"
+                accept="image/*"
+            >
+
+            <button type="submit" class="update-btn">
+                💾 Update Product
+            </button>
+
+        </form>
+
+        <a href="/products" class="back">
+            ← Back to Products
+        </a>
+
+    </div>
+
+</body>
+</html>

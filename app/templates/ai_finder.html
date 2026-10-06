@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ShopEasy - AI Assistant</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f5f6f8;
+        }
+
+
+        /* =========================
+           CHAT PAGE
+        ========================= */
+
+        .ai-container {
+            max-width: 950px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+
+
+        /* =========================
+           AI HEADER
+        ========================= */
+
+        .ai-header {
+            background: #222;
+            color: white;
+            padding: 18px 22px;
+            border-radius: 16px 16px 0 0;
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ai-avatar {
+            width: 45px;
+            height: 45px;
+
+            background: white;
+            color: #222;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 23px;
+        }
+
+        .ai-header h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .ai-header p {
+            margin: 3px 0 0;
+            font-size: 13px;
+            opacity: 0.75;
+        }
+
+
+        /* =========================
+           CHAT WINDOW
+        ========================= */
+
+        .chat-wrapper {
+            background: white;
+
+            border-radius: 0 0 16px 16px;
+
+            box-shadow:
+                0 5px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .chat-window {
+
+            height: 600px;
+
+            padding: 25px;
+
+            overflow-y: auto;
+
+            background: #fafafa;
+        }
+
+
+        /* =========================
+           WELCOME MESSAGE
+        ========================= */
+
+        .welcome-message {
+            text-align: center;
+
+            padding: 100px 20px 30px;
+
+            color: #666;
+        }
+
+        .welcome-message .welcome-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .welcome-message h1 {
+            margin: 0 0 8px;
+            color: #222;
+            font-size: 26px;
+        }
+
+        .welcome-message p {
+            margin: 0;
+            font-size: 15px;
+        }
+
+
+        /* =========================
+           USER MESSAGE
+        ========================= */
+
+        .message-row {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .user-row {
+            justify-content: flex-end;
+        }
+
+        .ai-row {
+            justify-content: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 75%;
+            padding: 13px 17px;
+            border-radius: 16px;
+
+            line-height: 1.5;
+            font-size: 15px;
+
+            word-wrap: break-word;
+        }
+
+        .user-bubble {
+            background: #222;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }   
+
+        .ai-bubble {
+            background: white;
+            color: #222;
+            border: 1px solid #e5e5e5;
+            border-bottom-left-radius: 4px;
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .message-name {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            opacity: 0.7;
+        }
+
+
+        /* =========================
+           PRODUCT GRID
+        ========================= */
+
+        .products-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(200px, 1fr));
+
+            gap: 15px;
+
+            margin-top: 15px;
+        }
+
+
+        /* =========================
+           PRODUCT CARD
+        ========================= */
+
+        .product-card {
+
+            background: white;
+
+            border: 1px solid #e5e5e5;
+
+            border-radius: 12px;
+
+            padding: 14px;
+
+            text-align: center;
+
+            transition: 0.2s;
+        }
+
+        .product-card:hover {
+
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 5px 15px rgba(0, 0, 0, 0.10);
+        }
+
+
+        /* =========================
+           PRODUCT IMAGE
+        ========================= */
+
+        .product-card img {
+
+            width: 100%;
+
+            height: 150px;
+
+            object-fit: contain;
+
+            border-radius: 8px;
+
+            display: block;
+
+            margin-bottom: 10px;
+        }
+
+
+        /* =========================
+           PRODUCT NAME
+        ========================= */
+
+        .product-card h3 {
+
+            margin: 8px 0;
+
+            font-size: 17px;
+        }
+
+
+        /* =========================
+           CATEGORY
+        ========================= */
+
+        .category {
+
+            display: inline-block;
+
+            padding: 4px 9px;
+
+            margin-bottom: 8px;
+
+            border-radius: 20px;
+
+            background: #f1f1f1;
+
+            color: #666;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           PRICE
+        ========================= */
+
+        .price {
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            margin-bottom: 12px;
+        }
+
+
+        /* =========================
+           VIEW BUTTON
+        ========================= */
+
+        .view-btn {
+
+            display: block;
+
+            width: 100%;
+
+            padding: 9px;
+
+            background: #222;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 7px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+        .view-btn:hover {
+            opacity: 0.85;
+        }
+
+
+        /* =========================
+           INPUT AREA
+        ========================= */
+
+        .input-area {
+
+            display: flex;
+
+            gap: 10px;
+
+            padding: 15px;
+
+            border-top: 1px solid #e5e5e5;
+
+            background: white;
+
+            border-radius: 0 0 16px 16px;
+        }
+
+
+        .input-area input {
+
+            flex: 1;
+
+            padding: 14px 16px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 25px;
+
+            outline: none;
+
+            font-size: 15px;
+        }
+
+        .input-area input:focus {
+            border-color: #222;
+        }
+
+
+        /* =========================
+           SEND BUTTON
+        ========================= */
+
+        .input-area button {
+
+            width: 50px;
+            height: 50px;
+
+            border: none;
+
+            border-radius: 50%;
+
+            background: #222;
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 18px;
+        }
+
+        .input-area button:hover {
+            opacity: 0.85;
+        }
+
+        .input-area button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+
+        /* =========================
+           LOADING
+        ========================= */
+
+        .loading {
+
+            padding: 10px 15px;
+
+            background: white;
+
+            border: 1px solid #e5e5e5;
+
+            border-radius: 15px;
+
+            color: #666;
+
+            display: inline-block;
+        }
+
+        .typing {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .typing span {
+            width: 7px;
+            height: 7px;
+            background: #888;
+            border-radius: 50%;
+            animation: typing 1.2s infinite;
+        }
+
+        .typing span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+            opacity: 0.3;
+            transform: translateY(0);
+        }
+
+        30% {
+            opacity: 1;
+            transform: translateY(-4px);
+        }
+    }
+
+
+        /* =========================
+           ERROR
+        ========================= */
+
+        .error {
+
+            padding: 12px 15px;
+
+            background: #fff0f0;
+
+            color: #c62828;
+
+            border-radius: 10px;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            .ai-container {
+                margin: 10px auto;
+                padding: 0 8px;
+            }
+
+            .chat-window {
+                height: 600px;
+                padding: 15px;
+            }
+
+            .message-bubble {
+                max-width: 90%;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ai-header {
+                padding: 15px;
+            }
+
+            .input-area {
+                padding: 10px;
+            }
+
+        }
+
+            .suggestions {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 12px;
+                margin-top: 25px;
+                max-width: 600px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .suggestions button {
+                padding: 11px 16px;
+                background: white;
+                border: 1px solid #dcdcdc;
+                border-radius: 12px;
+                cursor: pointer;
+                font-size: 13px;
+                color: #333;
+                transition: all 0.2s ease;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            }
+
+            .suggestions button:hover {
+                background: #222;
+                color: white;
+                border-color: #222;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+            }
+
+
+        /* =========================
+        CHAT UI POLISH
+        ========================= */
+
+            .message-row {
+                display: flex;
+                width: 100%;
+                margin: 15px 0;
+            }
+
+            .user-row {
+                justify-content: flex-end;
+            }
+
+            .ai-row {
+                justify-content: flex-start;
+            }
+
+            .message-bubble {
+                max-width: 75%;
+                padding: 14px 18px;
+                border-radius: 18px;
+                line-height: 1.5;
+                word-wrap: break-word;
+            }
+
+            .user-bubble {
+                background: #e8f0fe;
+                color: #222;
+                border-bottom-right-radius: 5px;
+            }
+
+            .ai-bubble {
+                background: #f5f5f5;
+                color: #222;
+                border-bottom-left-radius: 5px;
+            }
+
+            .message-name {
+                font-size: 13px;
+                font-weight: bold;
+                margin-bottom: 7px;
+                color: #555;
+            }
+
+        /* Product cards */
+
+            .products-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap: 15px;
+                margin-top: 15px;
+            }
+
+            .product-card {
+                background: white;
+                border: 1px solid #e5e5e5;
+                border-radius: 16px;
+                padding: 14px;
+                text-align: center;
+                transition: all 0.25s ease;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            }
+
+            .product-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            }
+
+            .product-card img {
+                width: 100%;
+                height: 140px;
+                object-fit: contain;
+                border-radius: 10px;
+                background: #fafafa;
+            }
+
+            .product-card h3 {
+                margin: 10px 0 5px;
+                font-size: 16px;
+            }
+
+            .product-card .category {
+                font-size: 12px;
+                color: #777;
+                margin-bottom: 5px;
+            }
+
+            .product-card .price {
+                font-size: 18px;
+                font-weight: bold;
+                margin: 8px 0;
+            }
+
+            .view-btn {
+                display: inline-block;
+                padding: 9px 16px;
+                border-radius: 9px;
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: bold;
+                background: #222;
+                color: white;
+                transition: all 0.2s ease;
+            }
+
+            .view-btn:hover {
+                background: #444;
+                transform: translateY(-1px);
+            }
+        /* Mobile */
+
+            @media (max-width: 600px) {
+
+            .message-bubble {
+                max-width: 88%;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .product-card {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .product-card img {
+                height: 180px;
+            }
+
+            .suggestions {
+                padding: 0 10px;
+            }
+
+            .suggestions button {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         NAVBAR
+    ========================= -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🛒 ShopEasy
+        </div>
+
+        <div class="nav-links">
+
+            <a href="{{ url_for('product_list') }}">
+                Products
+            </a>
+
+            <a href="{{ url_for('add_product_page') }}">
+                Add Product
+            </a>
+
+            <a href="{{ url_for('ai_finder') }}">
+                AI Finder
+            </a>
+
+            <a href="{{ url_for('view_cart') }}">
+                Cart
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =========================
+         AI CONTAINER
+    ========================= -->
+
+    <div class="ai-container">
+
+
+        <!-- AI HEADER -->
+
+        <div class="ai-header">
+
+            <div class="ai-avatar">
+                🤖
+            </div>
+
+            <div>
+
+                <h2>
+                    ShopAI Assistant
+                </h2>
+
+                <p>
+                    Your AI Product Assistant
+                </p>
+
+            </div>
+            <button class="clear-chat-btn" onclick="clearChat()">
+                🗑️ Clear Chat
+            </button>
+
+        </div>
+
+
+        <!-- CHAT WRAPPER -->
+
+        <div class="chat-wrapper">
+
+
+            <!-- CHAT WINDOW -->
+
+            <div
+                class="chat-window"
+                id="chatWindow"
+            >
+
+
+                <!-- WELCOME -->
+
+                <div
+                    class="welcome-message"
+                    id="welcomeMessage"
+                >
+
+                    <div class="welcome-icon">
+                        🛍️
+                    </div>
+
+                    <h1>
+                        How can I help you?
+                    </h1>
+
+                    <p>
+                        Ask me to find products based on
+                        category, price or product name.
+                    </p>
+
+                    <div class="suggestions">
+
+                        <button onclick="useSuggestion('Show me electronics')">
+                            💻 Show me electronics
+                        </button>
+
+                        <button onclick="useSuggestion('laptop under 35000')">
+                            💰 Laptop under 35000
+                        </button>
+
+                        <button onclick="useSuggestion('cheapest electronics')">
+                            🏷️ Cheapest electronics
+                        </button>
+
+                        <button onclick="useSuggestion('expensive electronics')">
+                            ⭐ Most expensive electronics
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CHAT MESSAGES -->
+
+                <div id="response"></div>
+
+
+            </div>
+
+
+            <!-- INPUT -->
+
+            <div class="input-area">
+
+                <input
+                    type="text"
+                    id="userMessage"
+                    placeholder="Ask me about a product..."
+                    autocomplete="off"
+                >
+
+                <button
+                    onclick="sendMessage()"
+                    title="Send"
+                >
+                    ➤
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+
+    <script>
+
+
+        async function sendMessage() {
+
+
+            const input =
+                document.getElementById("userMessage");
+
+            const responseBox =
+                document.getElementById("response");
+
+            const chatWindow =
+                document.getElementById("chatWindow");
+
+            const welcomeMessage =
+                document.getElementById("welcomeMessage");
+
+            const sendButton =
+                document.querySelector(".input-area button");
+
+
+            const message =
+                input.value.trim();
+
+
+            /* Empty message */
+
+            if (!message) {
+                return;
+            }
+
+
+            /* Hide welcome */
+
+            welcomeMessage.style.display = "none";
+
+
+            /* Add USER message */
+
+            responseBox.innerHTML += `
+
+                <div class="message-row user-row">
+
+                    <div class="message-bubble user-bubble">
+
+                        <div class="message-name">
+                            👤 You
+                        </div>
+
+                        ${message}
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            /* Clear input */
+
+            input.value = "";
+
+
+            /* Disable button */
+
+            sendButton.disabled = true;
+
+
+            sendButton.innerHTML =
+                "⏳";
+
+
+            /* Add loading */
+
+            const loadingId =
+                "loading-" + Date.now();
+
+
+            responseBox.innerHTML += `
+
+                <div
+                    class="message-row ai-row"
+                    id="${loadingId}"
+                >
+
+                    <div class="message-bubble ai-bubble">
+
+                        <div class="message-name">
+                            🤖 ShopAI Assistant
+                        </div>
+
+                        <div class="typing">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            /* Scroll down */
+
+            chatWindow.scrollTop =
+                chatWindow.scrollHeight;
+
+
+            try {
+
+
+                /* FormData */
+
+                const formData =
+                    new FormData();
+
+
+                formData.append(
+                    "message",
+                    message
+                );
+
+
+                /* Backend request */
+
+                const response =
+                    await fetch(
+                        "/ai-chat",
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                /* Remove loading */
+
+                const loadingElement =
+                    document.getElementById(
+                        loadingId
+                    );
+
+                if (loadingElement) {
+                    loadingElement.remove();
+                }
+
+
+                /* No products */
+
+                if (
+                    !data.products ||
+                    data.products.length === 0
+                ) {
+
+                    responseBox.innerHTML += `
+
+                        <div class="message-row ai-row">
+
+                            <div class="message-bubble ai-bubble">
+
+                                <div class="message-name">
+                                    🤖 ShopAI Assistant
+                                </div>
+
+                                <div class="error">
+
+                                    ${
+                                        data.message ||
+                                        "No products found."
+                                    }
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                    sendButton.disabled = false;
+                    sendButton.innerHTML = "➤";
+
+                    chatWindow.scrollTop =
+                        chatWindow.scrollHeight;
+
+                    input.focus();
+
+                    return;
+                }
+
+
+                /* Clean AI message */
+
+                const cleanMessage =
+                    data.message
+
+                    ? data.message
+                        .replace(/\*\*/g, "")
+                        .replace(/###/g, "")
+
+                    : "I found these products for you!";
+
+
+                /* Product HTML */
+
+                let productsHTML = `
+
+                    <div class="products-grid">
+
+                `;
+
+
+                data.products.forEach(
+                    product => {
+
+
+                        let imageUrl = "";
+
+                        const description =
+                            product.description || "No description available.";
+
+
+                        if (product.image) {
+
+                            imageUrl =
+                                "/static/images/" +
+                                product.image;
+
+                        }
+
+
+                        productsHTML += `
+
+                            <div class="product-card">
+
+                                <img
+                                    src="${imageUrl}"
+                                    alt="${product.name}"
+                                >
+
+                                <h3>
+                                    ${product.name}
+                                </h3>
+
+                                <p class="product-description">
+                                    ${description}
+                                </p>
+
+                                <div class="category">
+
+                                    ${
+                                        product.category ||
+                                        "Product"
+                                    }
+
+                                </div>
+
+                                <div class="price">
+
+                                    ₹${product.price}
+
+                                </div>
+
+                                <a
+                                    href="/product/${product.id}"
+                                    class="view-btn"
+                                >
+                                    View Product
+                                </a>
+
+                            </div>
+
+                        `;
+
+                    }
+                );
+
+
+                productsHTML += `
+                    </div>
+                `;
+
+
+                /* Add AI message */
+
+                responseBox.innerHTML += `
+
+                    <div class="message-row ai-row">
+
+                        <div class="message-bubble ai-bubble">
+
+                            <div class="message-name">
+                                🤖 ShopAI Assistant
+                            </div>
+
+                            <div>
+                                🛍️ ${cleanMessage}
+                            </div>
+
+                            ${productsHTML}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+
+                /* Enable button */
+
+                sendButton.disabled = false;
+
+                sendButton.innerHTML =
+                    "➤";
+
+
+                /* Scroll */
+
+                chatWindow.scrollTop =
+                    chatWindow.scrollHeight;
+
+
+                input.focus();
+
+            }
+
+
+            catch (error) {
+
+
+                console.error(
+                    "AI Chat Error:",
+                    error
+                );
+
+
+                const loadingElement =
+                    document.getElementById(
+                        loadingId
+                    );
+
+                if (loadingElement) {
+                    loadingElement.remove();
+                }
+
+
+                responseBox.innerHTML += `
+
+                    <div class="message-row ai-row">
+
+                        <div class="message-bubble ai-bubble">
+
+                            <div class="message-name">
+                                🤖 ShopAI Assistant
+                            </div>
+
+                            <div class="error">
+
+                                Something went wrong.
+                                Please try again.
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+
+                sendButton.disabled = false;
+
+                sendButton.innerHTML =
+                    "➤";
+
+
+                chatWindow.scrollTop =
+                    chatWindow.scrollHeight;
+
+            }
+
+        }
+
+
+    /* =========================
+    SUGGESTED QUESTIONS
+    ========================= */
+
+    function useSuggestion(message) {
+
+        const input =
+            document.getElementById("userMessage");
+
+        input.value = message;
+
+        sendMessage();
+    }
+
+
+        /* =========================
+           ENTER KEY
+        ========================= */
+
+        document
+            .getElementById("userMessage")
+            .addEventListener(
+                "keypress",
+                function(event) {
+
+                    if (event.key === "Enter") {
+
+                        sendMessage();
+
+                    }
+
+                }
+            );
+
+            function clearChat() {
+
+                const responseBox =
+                    document.getElementById("response");
+
+                const welcomeMessage =
+                    document.getElementById("welcomeMessage");
+
+                responseBox.innerHTML = "";
+
+                welcomeMessage.style.display = "block";
+            }
+
+
+    </script>
+
+
+</body>
+
+</html>
+

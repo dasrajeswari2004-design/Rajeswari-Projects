@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Payment - ShopEasy</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .payment-page {
+            min-height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 20px;
+        }
+
+        .payment-card {
+            width: 850px;
+            max-width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: white;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.10);
+        }
+
+        .payment-summary {
+            padding: 45px;
+            background: linear-gradient(145deg, #6c5ce7, #0984e3);
+            color: white;
+        }
+
+        .payment-summary h1 {
+            font-size: 32px;
+            margin-bottom: 25px;
+        }
+
+        .payment-product {
+            background: rgba(255,255,255,0.15);
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        .payment-product h2 {
+            margin-bottom: 10px;
+        }
+
+        .payment-total {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 25px;
+        }
+
+        .payment-form {
+            padding: 45px;
+        }
+
+        .payment-form h2 {
+            margin-bottom: 25px;
+        }
+
+        .payment-option {
+            display: block;
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .payment-option:hover {
+            border-color: #6c5ce7;
+            background: #f7f5ff;
+            transform: translateY(-2px);
+        }
+
+        .payment-option input {
+            margin-right: 10px;
+        }
+
+        .payment-form button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #6c5ce7, #0984e3);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .payment-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(108,92,231,0.3);
+        }
+
+        .back-btn {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #6c5ce7;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 700px) {
+
+            .payment-card {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-summary,
+            .payment-form {
+                padding: 30px 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <!-- Logo -->
+    <div class="logo">
+        🛒 <span>ShopEasy</span>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-links">
+
+        <a href="{{ url_for('product_list') }}">
+            Home
+        </a>
+
+        <a href="{{ url_for('product_list') }}#products">
+            Products
+        </a>
+
+        <a href="{{ url_for('add_product') }}">
+            Add Product
+        </a>
+
+        <a href="{{ url_for('ai_finder') }}">
+            🤖 AI Finder
+        </a>
+
+        <a href="{{ url_for('view_cart') }}">
+            🛒 Cart
+        </a>
+
+    </div>
+
+</nav>
+
+<!-- ================= PAYMENT PAGE ================= -->
+
+<section class="payment-page">
+
+    <div class="payment-card">
+
+
+        <!-- ORDER SUMMARY -->
+
+        <div class="payment-summary">
+
+            <h1>
+                🛒 Order Summary
+            </h1>
+
+
+            <div class="payment-product">
+
+                <p>
+                    Product
+                </p>
+
+                <h2>
+                    {{ product.name }}
+                </h2>
+
+                <p>
+                    Category: {{ product.category }}
+                </p>
+
+                <p>
+                    Quantity: {{ quantity }}
+                </p>
+
+                <div class="payment-total">
+
+                    ₹{{ "{:,.0f}".format(total_price) }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PAYMENT FORM -->
+
+        <div class="payment-form">
+
+            <h2>
+                💳 Choose Payment
+            </h2>
+
+
+            <form
+                action="{{ url_for('payment', id=product.id) }}"
+                method="POST"
+            >
+
+
+                <!-- CUSTOMER DETAILS -->
+
+                <input
+                    type="hidden"
+                    name="customer_name"
+                    value="{{ customer_name }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="phone"
+                    value="{{ phone }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="address"
+                    value="{{ address }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="quantity"
+                    value="{{ quantity }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="total_price"
+                    value="{{ total_price }}"
+                >
+
+
+                <!-- UPI -->
+
+                <label class="payment-option">
+
+                    <input
+                        type="radio"
+                        name="payment_method"
+                        value="UPI"
+                        required
+                    >
+
+                    📱 UPI Payment
+
+                </label>
+
+
+                <!-- CARD -->
+
+                <label class="payment-option">
+
+                    <input
+                        type="radio"
+                        name="payment_method"
+                        value="Card"
+                    >
+
+                    💳 Debit / Credit Card
+
+                </label>
+
+
+                <!-- COD -->
+
+                <label class="payment-option">
+
+                    <input
+                        type="radio"
+                        name="payment_method"
+                        value="COD"
+                    >
+
+                    💵 Cash on Delivery
+
+                </label>
+
+
+                <!-- PAY BUTTON -->
+
+                <button type="submit">
+
+                    Pay ₹{{ "{:,.0f}".format(total_price) }} →
+
+                </button>
+
+
+            </form>
+
+
+            <!-- BACK -->
+
+            <a
+                href="{{ url_for('product_list') }}"
+                class="back-btn"
+            >
+
+                ← Back to Products
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <div class="footer-logo">
+        🛒 ShopEasy
+    </div>
+
+    <p>
+        Your modern online shopping destination.
+    </p>
+
+    <hr>
+
+    <p>
+        © 2026 ShopEasy | All Rights Reserved
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>
+

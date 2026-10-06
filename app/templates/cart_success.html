@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Order Successful - ShopEasy</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🛒 ShopEasy
+    </div>
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('product_list') }}">
+            Home
+        </a>
+
+        <a href="{{ url_for('product_list') }}#products">
+            Products
+        </a>
+
+        <a href="{{ url_for('ai_finder') }}">
+            🤖 AI Finder
+        </a>
+
+        <a href="{{ url_for('view_cart') }}">
+            🛒 Cart
+        </a>
+
+    </div>
+
+</nav>
+
+
+<section class="success-page">
+
+    <div class="success-box">
+
+        <div class="success-icon">
+            ✅
+        </div>
+
+        <h1>
+            Order Placed Successfully!
+        </h1>
+
+        <p>
+            Thank you for shopping with ShopEasy.
+        </p>
+
+
+        <div class="success-details">
+
+            <h2>Order Summary</h2>
+
+
+            {% for product in cart %}
+
+            <div class="success-item">
+
+                <div>
+
+                    <strong>
+                        {{ product.name }}
+                    </strong>
+
+                    <p>
+                        Quantity: {{ product.quantity }}
+                    </p>
+
+                </div>
+
+                <strong>
+                    ₹{{ "{:,.0f}".format(product.price * product.quantity) }}
+                </strong>
+
+            </div>
+
+            {% endfor %}
+
+
+            <hr>
+
+
+            <div class="success-row">
+
+                <span>
+                    Total Items
+                </span>
+
+                <strong>
+                    {{ total_items }}
+                </strong>
+
+            </div>
+
+
+            <div class="success-row">
+
+                <span>
+                    Payment Method
+                </span>
+
+                <strong>
+                    {{ payment_method }}
+                </strong>
+
+            </div>
+
+
+            <div class="success-row grand-total">
+
+                <span>
+                    Grand Total
+                </span>
+
+                <strong>
+                    ₹{{ "{:,.0f}".format(total_price) }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('product_list') }}"
+            class="success-btn"
+        >
+            Continue Shopping →
+        </a>
+
+    </div>
+
+</section>
+
+
+</body>
+
+</html>

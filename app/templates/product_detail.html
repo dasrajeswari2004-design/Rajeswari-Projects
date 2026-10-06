@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ product.name }} - ShopEasy</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🛒 ShopEasy
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/products">Home</a>
+
+        <a href="/products#products">Products</a>
+
+        <a href="/add-product">Add Product</a>
+
+        <a href="{{ url_for('ai_finder') }}">AI Finder</a>
+
+        <a href="{{ url_for('view_cart') }}">🛒 Cart</a>
+
+        {% if "logged_in" in session and session["logged_in"] %}
+            <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+        {% endif %}
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <div class="product-detail">
+
+        <div class="product-image">
+
+            {% if product.image %}
+
+                <img
+                    src="{{ url_for('static', filename='images/' + product.image) }}"
+                    alt="{{ product.name }}"
+                >
+
+            {% else %}
+
+                <div style="font-size: 80px; padding: 80px; text-align: center;">
+                    🛍️
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="product-info">
+
+            <p class="category">
+                {{ product.category }}
+            </p>
+
+            <h3>
+                <a href="{{ url_for('product_detail', product_id=product.id) }}">
+
+                {{ product.name }}
+
+                </a>
+            </h3>
+
+            <p class="price">
+                ₹{{ "{:,.0f}".format(product.price) }}
+            </p>
+
+            {% if product.description %}
+
+                <p class="description">
+                    {{ product.description }}
+                </p>
+
+            {% endif %}
+
+            <div class="quantity-section">
+
+                <span>Quantity:</span>
+
+                <button type="button" onclick="decreaseQuantity()">
+                    −
+                </button>
+
+                <span id="quantity">
+                    1
+                </span>
+
+                <button type="button" onclick="increaseQuantity()">
+                    +
+                </button>
+
+            </div>
+
+
+            <div class="buttons">
+
+                <a
+                    href="{{ url_for('add_to_cart', id=product.id) }}"
+                    class="btn cart"
+                >
+                    🛒 Add to Cart
+                </a>
+
+                <a
+                    href="{{ url_for('buy_product', id=product.id) }}"
+                    class="btn buy"
+                    onclick="saveQuantity()"
+                >
+                    Buy Now
+                </a>
+
+                <a
+                    href="{{ url_for('product_list') }}"
+                    class="back-products"
+                >
+                    ← Back to Products
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let quantity = 1;
+
+function increaseQuantity() {
+
+    quantity++;
+
+    document.getElementById("quantity").innerText = quantity;
+
+}
+
+function decreaseQuantity() {
+
+    if (quantity > 1) {
+
+        quantity--;
+
+        document.getElementById("quantity").innerText = quantity;
+
+    }
+
+}
+
+function saveQuantity() {
+
+    sessionStorage.setItem("productQuantity", quantity);
+
+}
+
+</script>
+
+
+</body>
+</html>
